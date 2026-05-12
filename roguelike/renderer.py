@@ -1,9 +1,15 @@
+import argparse
 import curses
 import _curses
 from roguelike.engine import Game
 
 def main():
-    game = Game(20, 20)
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--width', type=int, default=20)
+    parser.add_argument('--height', type=int, default=20)
+    args = parser.parse_args()
+
+    game = Game(args.width, args.height)
     
     def run(stdscr):
         curses.curs_set(0)
