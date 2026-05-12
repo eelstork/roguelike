@@ -1,4 +1,5 @@
 import curses
+import _curses
 from roguelike.engine import Game
 
 def main():
@@ -33,6 +34,8 @@ def main():
                 
     try:
         curses.wrapper(run)
+    except (_curses.error, curses.error):
+        print("Error: Could not initialize curses. Make sure you are running this in a terminal.")
     except KeyboardInterrupt:
         pass
 
