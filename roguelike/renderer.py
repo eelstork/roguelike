@@ -32,6 +32,14 @@ def main():
             if action:
                 game.step(action)
                 
+            if game.done:
+                stdscr.clear()
+                stdscr.addstr(game.render())
+                stdscr.addstr("\nPress any key to exit.")
+                stdscr.refresh()
+                stdscr.getch()
+                break
+                
     try:
         curses.wrapper(run)
     except (_curses.error, curses.error):
