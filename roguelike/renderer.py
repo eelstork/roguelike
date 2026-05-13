@@ -1,8 +1,24 @@
 import curses
 import _curses
+import sys
 from roguelike.engine import Game
 
-def main():
+class RoguelikeEnv:
+    def __init__(self, width=20, height=20):
+        self.game = Game(width, height)
+
+    def step(self, action):
+        self.game.step(action)
+        return self.game.render(), self.game.done
+
+    def render(self):
+        return self.game.render()
+
+    @property
+    def done(self):
+        return self.game.done
+
+def run_curses():
     game = Game(20, 20)
     
     def run(stdscr):
@@ -37,6 +53,16 @@ def main():
     except (_curses.error, curses.error):
         print("Error: Could not initialize curses. Make sure you are running this in a terminal.")
     except KeyboardInterrupt:
+        pass
+
+def main():
+    if sys.stdin.isatty():
+        run_curses()
+    else:
+        # Machine agent mode: simple loop or importable interface
+        # For this exercise, maybe just print to stdout for now
+        # but the request asks to make it playable by agents.
+        # Allowing an import of RoguelikeEnv is the key.
         pass
 
 if __name__ == '__main__':
