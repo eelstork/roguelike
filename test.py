@@ -25,11 +25,14 @@ def test_engine():
     assert game.done is True
     assert game.outcome == "win"
 
-    # Lose condition test
+    # Lose condition test (health)
     game = Game(seed=42)
-    while not game.done:
-        game.step('up')
-        
+    # Move until player hits monster 3 times
+    for _ in range(100):
+        if game.done: break
+        game.step('down')
+    
+    assert game.player_health == 0
     assert game.done is True
     assert game.outcome == "lose"
 
