@@ -20,13 +20,13 @@ def main():
             
             if key == ord('q'):
                 action = 'quit'
-            elif key == curses.KEY_UP or key == ord('k'):
+            elif key == curses.KEY_UP or key == ord('w'):
                 action = 'up'
-            elif key == curses.KEY_DOWN or key == ord('j'):
+            elif key == curses.KEY_DOWN or key == ord('s'):
                 action = 'down'
-            elif key == curses.KEY_LEFT or key == ord('h'):
+            elif key == curses.KEY_LEFT or key == ord('a'):
                 action = 'left'
-            elif key == curses.KEY_RIGHT or key == ord('l'):
+            elif key == curses.KEY_RIGHT or key == ord('d'):
                 action = 'right'
             
             if action:
