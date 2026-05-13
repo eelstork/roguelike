@@ -9,6 +9,7 @@ class Game:
         self._done = False
         self._outcome = ""
         self._turn = 0
+        self.hp = 3
         self._player_pos = [1, 1]
         self._monster_pos = [width - 2, height - 2]
         
@@ -112,14 +113,16 @@ class Game:
 
         # Conditions
         if self._monster_pos == self._player_pos:
-            self._done = True
-            self._outcome = "lose"
+            self.hp -= 1
+            if self.hp <= 0:
+                self._done = True
+                self._outcome = "lose"
         elif not self.items:
             self._done = True
             self._outcome = "win"
 
     def render(self):
-        status = f"turn: {self.turn}  items: {3-len(self.items)}/3  outcome: {self.outcome}"
+        status = f"turn: {self.turn}  items: {3-len(self.items)}/3  hp: {self.hp}  outcome: {self.outcome}"
         output = [status]
         for y in range(self.height):
             row = list(self.map[y])
