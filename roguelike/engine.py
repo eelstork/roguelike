@@ -11,6 +11,7 @@ class Game:
         self._turn = 0
         self._player_pos = [1, 1]
         self._monster_pos = [width - 2, height - 2]
+        self.player_health = 3
         
         # Initialize map
         self.map = []
@@ -29,6 +30,13 @@ class Game:
             iy = self.rng.randint(1, height - 2)
             if [ix, iy] != self._player_pos and [ix, iy] != self._monster_pos and [ix, iy] not in self.items:
                 self.items.append([ix, iy])
+
+        self.potions = []
+        while len(self.potions) < 2:
+            px = self.rng.randint(1, width - 2)
+            py = self.rng.randint(1, height - 2)
+            if [px, py] != self._player_pos and [px, py] != self._monster_pos and [px, py] not in self.items and [px, py] not in self.potions:
+                self.potions.append([px, py])
 
     @property
     def player_pos(self):
@@ -82,6 +90,11 @@ class Game:
         if self._player_pos in self.items:
             self.items.remove(list(self._player_pos))
         
+        # Pickup potion
+        if self._player_pos in self.potions:
+            self.potions.remove(list(self._player_pos))
+            self.player_health = min(3, self.player_health + 1)
+        
         # Monster move
         mx, my = self._monster_pos
         px, py = self._player_pos
@@ -112,20 +125,25 @@ class Game:
 
         # Conditions
         if self._monster_pos == self._player_pos:
-            self._done = True
-            self._outcome = "lose"
+            self.player_health -= 1
+            if self.player_health <= 0:
+                self._done = True
+                self._outcome = "lose"
         elif not self.items:
             self._done = True
             self._outcome = "win"
 
     def render(self):
-        status = f"turn: {self.turn}  items: {3-len(self.items)}/3  outcome: {self.outcome}"
+        status = f"turn: {self.turn}  health: {self.player_health}/3  items: {3-len(self.items)}/3  outcome: {self.outcome}"
         output = [status]
         for y in range(self.height):
             row = list(self.map[y])
             for item in self.items:
                 if y == item[1]:
                     row[item[0]] = '*'
+            for potion in self.potions:
+                if y == potion[1]:
+                    row[potion[0]] = 'P'
             if y == self._monster_pos[1]:
                 row[self._monster_pos[0]] = 'M'
             if y == self._player_pos[1]:
