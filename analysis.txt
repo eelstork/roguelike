@@ -1,0 +1,1 @@
+The current implementation of the `roguelike` repository does not include any monsters or items. The `roguelike/engine.py` file only handles a player character, walls, and floor tiles. The game loop and rendering logic in `roguelike/renderer.py` and `roguelike/engine.py` do not reference any entity types other than the player.
