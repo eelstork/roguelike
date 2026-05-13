@@ -150,3 +150,31 @@ class Game:
                 row[self._player_pos[0]] = '@'
             output.append("".join(row))
         return "\n".join(output)
+
+    def to_dict(self) -> dict:
+        return {
+            'width': self.width,
+            'height': self.height,
+            'seed': self.seed,
+            'player_pos': self._player_pos,
+            'monster_pos': self._monster_pos,
+            'turn': self._turn,
+            'done': self._done,
+            'outcome': self._outcome,
+            'items': self.items,
+            'player_health': self.player_health,
+            'potions': self.potions,
+        }
+
+    @classmethod
+    def from_dict(cls, data: dict) -> 'Game':
+        game = cls(width=data['width'], height=data['height'], seed=data['seed'])
+        game._player_pos = data['player_pos']
+        game._monster_pos = data['monster_pos']
+        game._turn = data['turn']
+        game._done = data['done']
+        game._outcome = data['outcome']
+        game.items = data['items']
+        game.player_health = data['player_health']
+        game.potions = data['potions']
+        return game

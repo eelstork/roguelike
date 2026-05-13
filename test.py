@@ -57,8 +57,6 @@ def test_cli():
         
         # Move to target
         curr_x, curr_y = data['player_pos']
-        # We need to reach (target[0], target[1])
-        # Note: monster also moves. This is fine.
         
         # Just loop steps until items are collected.
         items_at_start = 3
@@ -92,7 +90,57 @@ def test_cli():
         if os.path.exists(tmp_file):
             os.remove(tmp_file)
 
+def test_round_trip():
+    # Build a game, step several times into a state where player_health < 3
+    # and at least one potion has been picked up
+    
+    # 1. Find a potion position
+    g = Game(seed=123)
+    potion_pos = g.potions[0]
+    
+    # Move player to potion
+    while g.player_pos[0] < potion_pos[0]: g.step('right')
+    while g.player_pos[0] > potion_pos[0]: g.step('left')
+    while g.player_pos[1] < potion_pos[1]: g.step('down')
+    while g.player_pos[1] > potion_pos[1]: g.step('up')
+    
+    # After picking up potion, player health should be 3 if it was full? 
+    # Actually potion increases health. Let's make sure it's < 3 by moving into monster.
+    
+    # Move into monster at least once
+    g.step('down')
+    g.step('down')
+    g.step('down')
+    g.step('down')
+    
+    assert g.player_health < 3
+    
+    # Save
+    data = g.to_dict()
+    # Load
+    g2 = Game.from_dict(data)
+    
+    # Render
+    r1 = g.render()
+    r2 = g2.render()
+    
+    assert r1 == r2
+    
+    # CLI version
+    tmp_file = "roundtrip.json"
+    try:
+        with open(tmp_file, 'w') as f:
+            json.dump(data, f)
+            
+        res = run_cmd(['show', '--state', tmp_file])
+        assert res.returncode == 0
+        assert res.stdout.strip() == r1.strip()
+    finally:
+        if os.path.exists(tmp_file):
+            os.remove(tmp_file)
+
 if __name__ == "__main__":
     test_engine()
     test_cli()
+    test_round_trip()
     print("All tests passed")

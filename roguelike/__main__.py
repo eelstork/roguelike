@@ -5,19 +5,8 @@ import sys
 from roguelike.engine import Game
 
 def save_game(game, path):
-    data = {
-        'width': game.width,
-        'height': game.height,
-        'seed': game.seed,
-        'player_pos': game._player_pos,
-        'monster_pos': game._monster_pos,
-        'turn': game._turn,
-        'done': game._done,
-        'outcome': game._outcome,
-        'items': game.items
-    }
     with open(path, 'w') as f:
-        json.dump(data, f)
+        json.dump(game.to_dict(), f)
 
 def load_game(path):
     if not os.path.exists(path):
@@ -26,14 +15,7 @@ def load_game(path):
     with open(path, 'r') as f:
         data = json.load(f)
     
-    game = Game(width=data['width'], height=data['height'], seed=data['seed'])
-    game._player_pos = data['player_pos']
-    game._monster_pos = data['monster_pos']
-    game._turn = data['turn']
-    game._done = data['done']
-    game._outcome = data['outcome']
-    game.items = data['items']
-    return game
+    return Game.from_dict(data)
 
 def main():
     parser = argparse.ArgumentParser()
