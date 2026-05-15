@@ -12,7 +12,10 @@ def get_game_state():
 
 @app.route('/action', methods=['POST'])
 def perform_action():
-    data = request.get_json()
+    data = request.get_json(silent=True)
+    if data is None:
+        return jsonify({"error": "Invalid or missing JSON body"}), 400
+    
     action = data.get('action')
     if action:
         game.step(action)
