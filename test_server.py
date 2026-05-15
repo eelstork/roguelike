@@ -35,3 +35,8 @@ def test_action_success(server):
     res = requests.post("http://localhost:5001/action", json={"action": "right"})
     assert res.status_code == 200
     assert "player_pos" in res.json()
+
+def test_health(server):
+    res = requests.get("http://localhost:5001/health")
+    assert res.status_code == 200
+    assert res.json() == {"status": "ok"}
