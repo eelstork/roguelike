@@ -6,6 +6,10 @@ app = Flask(__name__)
 # Global game instance
 game = Game()
 
+@app.route('/health', methods=['GET'])
+def health():
+    return jsonify({"status": "ok"}), 200
+
 @app.route('/', methods=['GET'])
 def get_game_state():
     return jsonify(game.to_dict())
